@@ -70,8 +70,8 @@ public class Controller : MonoBehaviour
     {
 
         Rigidbody bulletRb = Instantiate(bullet, bulletSpawn.position , Quaternion.identity).GetComponent<Rigidbody>();
-        bulletRb.AddForce(transform.forward * 16f, ForceMode.Impulse);
-        //bulletRb.AddForce(transform.up * 5f, ForceMode.Impulse);
+        bulletRb.AddForce(transform.forward * 1.6f, ForceMode.Impulse);
+        bulletRb.AddForce(transform.up * 0.4f, ForceMode.Impulse);
     }   
 
     private void Jump()

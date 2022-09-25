@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Collectable : MonoBehaviour
+public class Heart : MonoBehaviour
 {
-    [SerializeField]
-    private int pointValue;
+   [SerializeField]
+    private int healthValue;
     private void OnCollisionEnter(Collision other) 
     {
 
@@ -14,10 +14,9 @@ public class Collectable : MonoBehaviour
 
             //increase score here
 
-            ScoreManager.instance.ChangeScore(pointValue);
+            HealthManager.instance.ChangeHealth(healthValue);
             Destroy(gameObject);
         }
 
     }
-   
 }

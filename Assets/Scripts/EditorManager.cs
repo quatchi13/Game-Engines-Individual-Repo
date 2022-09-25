@@ -51,7 +51,9 @@ public class EditorManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(gameCam.enabled == false && editorCam.enabled ==true)
+        if(SceneControl.instance.GetCurrentScene() == 1)
+        {
+            if(gameCam.enabled == false && editorCam.enabled ==true)
         { 
             {
                 isEditing = true;
@@ -65,6 +67,12 @@ public class EditorManager : MonoBehaviour
             Time.timeScale = 1;
             Cursor.lockState = CursorLockMode.Locked;
         }
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.None;
+        }
+        
     }
 
     private void SwitchCam()
