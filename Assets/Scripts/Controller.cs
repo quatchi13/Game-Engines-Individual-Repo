@@ -39,20 +39,13 @@ public class Controller : MonoBehaviour
 
     
 
-    private void OnEnable() {
-        inputAction.Enable();
-    }
-
-    private void OnDisable() {
-        inputAction.Disable();
-    }
 
 
     // Start is called before the first frame update
-    void Awake()
+    void Start()
     {
 
-        inputAction = new PlayerControls();
+        inputAction = PlayerInputController.controller.inputAction;
 
         inputAction.Player.Move.performed += cntxt => move = cntxt.ReadValue<Vector2>();
         inputAction.Player.Move.canceled += cntxt => move = Vector2.zero;

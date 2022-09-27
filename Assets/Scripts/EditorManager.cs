@@ -16,25 +16,24 @@ public class EditorManager : MonoBehaviour
 
     GameObject item;
 
-    bool instiated = false;
+    
 
     public Camera gameCam;
     public Camera editorCam;
 
     public bool isEditing = false;
+    bool instantiated;
 
-    private void OnEnable() {
-        inputActions.Enable();
-    }
+    public Vector3 mousePos;
 
-    private void OnDisable() {
-        inputActions.Disable();
-    }
+    Subject subject = new Subject();
+
+
 
     // Start is called before the first frame update
-    void Awake()
+    void Start()
     {
-        inputActions = new PlayerControls();
+        inputActions = PlayerInputController.controller.inputAction;
 
         inputActions.Editor.Activate.performed += cntxt => SwitchCam();
 
@@ -51,7 +50,8 @@ public class EditorManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(SceneControl.instance.GetCurrentScene() == 1)
+        //replace with SceneControl.instance.GetCurrentScene() == 1
+        if(true)
         {
             if(gameCam.enabled == false && editorCam.enabled ==true)
         { 
@@ -72,6 +72,14 @@ public class EditorManager : MonoBehaviour
         {
             Cursor.lockState = CursorLockMode.None;
         }
+
+        if(instantiated)
+        {
+            mousePos = Mouse.current.position.ReadValue();
+            mousePos = new Vector3(mousePos.x, mousePos.y, 7);
+
+            item.transform.position = editorCam.ScreenToWorldPoint(mousePos);
+        }
         
     }
 
@@ -83,30 +91,38 @@ public class EditorManager : MonoBehaviour
 
     private void AddItem(int itemNumber)
     {
-        if(isEditing && !instiated)
+        if(isEditing && !instantiated)
         {
 
-            if(itemNumber == 1)
+
+            switch(itemNumber)
             {
+                case 1:
                 item = Instantiate(prefab1);
-
-            }
-            else if (itemNumber == 2)
-            {
+                    SpikeBall spike1 = new SpikeBall(item, new GreenMat());
+                    subject.AddObserver(spike1);
+                break;
+                case 2:
                 item = Instantiate(prefab2);
-            }
-            else
-            {
-                return;
+                SpikeBall spike2 = new SpikeBall(item, new YellowMat());
+                subject.AddObserver(spike2);
+                break;
+                default:
+                break;
             }
 
-            instiated = true;
+
+            subject.Notify();
+            instantiated = true;
         }
     }
 
     private void ConfirmPlacement()
     {
+        item.GetComponent<Rigidbody>().useGravity = true;
+        item.GetComponent<SphereCollider>().enabled = true;
 
+        instantiated = false;
 
     }
 }
