@@ -238,6 +238,15 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Undo"",
+                    ""type"": ""Button"",
+                    ""id"": ""bd5c2016-443e-44de-9bbb-587e678d0029"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -284,6 +293,17 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""action"": ""Confirm"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""92b5e9ba-1c22-40f3-9620-2cb4b453ec54"",
+                    ""path"": ""<Keyboard>/backspace"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Undo"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -302,6 +322,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         m_Editor_AddItem1 = m_Editor.FindAction("AddItem1", throwIfNotFound: true);
         m_Editor_AddItem2 = m_Editor.FindAction("AddItem2", throwIfNotFound: true);
         m_Editor_Confirm = m_Editor.FindAction("Confirm", throwIfNotFound: true);
+        m_Editor_Undo = m_Editor.FindAction("Undo", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -422,6 +443,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_Editor_AddItem1;
     private readonly InputAction m_Editor_AddItem2;
     private readonly InputAction m_Editor_Confirm;
+    private readonly InputAction m_Editor_Undo;
     public struct EditorActions
     {
         private @PlayerControls m_Wrapper;
@@ -430,6 +452,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         public InputAction @AddItem1 => m_Wrapper.m_Editor_AddItem1;
         public InputAction @AddItem2 => m_Wrapper.m_Editor_AddItem2;
         public InputAction @Confirm => m_Wrapper.m_Editor_Confirm;
+        public InputAction @Undo => m_Wrapper.m_Editor_Undo;
         public InputActionMap Get() { return m_Wrapper.m_Editor; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -451,6 +474,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Confirm.started -= m_Wrapper.m_EditorActionsCallbackInterface.OnConfirm;
                 @Confirm.performed -= m_Wrapper.m_EditorActionsCallbackInterface.OnConfirm;
                 @Confirm.canceled -= m_Wrapper.m_EditorActionsCallbackInterface.OnConfirm;
+                @Undo.started -= m_Wrapper.m_EditorActionsCallbackInterface.OnUndo;
+                @Undo.performed -= m_Wrapper.m_EditorActionsCallbackInterface.OnUndo;
+                @Undo.canceled -= m_Wrapper.m_EditorActionsCallbackInterface.OnUndo;
             }
             m_Wrapper.m_EditorActionsCallbackInterface = instance;
             if (instance != null)
@@ -467,6 +493,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Confirm.started += instance.OnConfirm;
                 @Confirm.performed += instance.OnConfirm;
                 @Confirm.canceled += instance.OnConfirm;
+                @Undo.started += instance.OnUndo;
+                @Undo.performed += instance.OnUndo;
+                @Undo.canceled += instance.OnUndo;
             }
         }
     }
@@ -484,5 +513,6 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         void OnAddItem1(InputAction.CallbackContext context);
         void OnAddItem2(InputAction.CallbackContext context);
         void OnConfirm(InputAction.CallbackContext context);
+        void OnUndo(InputAction.CallbackContext context);
     }
 }

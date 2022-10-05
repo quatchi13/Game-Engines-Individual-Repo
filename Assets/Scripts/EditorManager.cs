@@ -6,6 +6,8 @@ using UnityEngine.InputSystem;
 public class EditorManager : MonoBehaviour
 {
 
+    public static EditorManager instance;
+
     PlayerControls inputActions;
 
     [SerializeField]
@@ -14,14 +16,18 @@ public class EditorManager : MonoBehaviour
     [SerializeField]
     private GameObject prefab2;
 
-    GameObject item;
+    public GameObject item;
 
-    bool instiated = false;
+    public bool instiated = false;
 
     public Camera gameCam;
     public Camera editorCam;
 
     public bool isEditing = false;
+
+    ICommand command;
+
+    UIManager ui;
 
     private void OnEnable() {
         inputActions.Enable();
@@ -34,6 +40,11 @@ public class EditorManager : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
+        if(instance = null)
+        {
+            instance = this;
+        }
+
         inputActions = new PlayerControls();
 
         inputActions.Editor.Activate.performed += cntxt => SwitchCam();
@@ -46,13 +57,14 @@ public class EditorManager : MonoBehaviour
 
         gameCam.enabled = true;
         editorCam.enabled = false;
+
+        ui = GetComponent<UIManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (SceneControl.instance.GetCurrentScene() == 1)
-        {
+       
             if (gameCam.enabled == false && editorCam.enabled == true)
             {
 
@@ -68,11 +80,7 @@ public class EditorManager : MonoBehaviour
                 Cursor.lockState = CursorLockMode.Locked;
             }
 
-        }
-        else 
-        {
-            Cursor.lockState = CursorLockMode.None;
-        }
+        
         
     }
 
@@ -80,6 +88,7 @@ public class EditorManager : MonoBehaviour
     {
         gameCam.enabled = !gameCam.enabled;
         editorCam.enabled = !editorCam.enabled;
+        ui.ToggleEditorUI();
     }
 
     private void AddItem(int itemNumber)
@@ -107,7 +116,15 @@ public class EditorManager : MonoBehaviour
 
     private void ConfirmPlacement()
     {
+        if(isEditing && instiated)
+        {
+            item.GetComponent<Rigidbody>().useGravity = true;
+            item.GetComponent<Collider>().enabled = true;
 
+            //command = new 
+
+            instiated = false;
+        }
 
     }
 }

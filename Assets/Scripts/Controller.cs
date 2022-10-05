@@ -7,6 +7,7 @@ public class Controller : MonoBehaviour
 {
 
    
+    public static Controller controller;
 
     //player movement
     public PlayerControls inputAction;
